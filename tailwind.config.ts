@@ -28,6 +28,11 @@ const config: Config = {
       },
     },
     extend: {
+      screens: {
+        // Desktop con poca altura (laptops de 768 px): secciones fijadas (pin)
+        // que deben entrar completas en pantalla.
+        short: { raw: "(min-width: 1024px) and (max-height: 820px)" },
+      },
       colors: {
         // Marca
         petrol: {

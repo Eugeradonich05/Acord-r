@@ -65,7 +65,13 @@ export const values: readonly Value[] = [
   },
 ];
 
-export type Step = { title: string; description: string; timing: string };
+export type Step = {
+  title: string;
+  description: string;
+  timing: string;
+  /** Lo que el cliente recibe al cerrar la etapa. */
+  deliverable: { title: string; description: string };
+};
 
 export const steps: readonly Step[] = [
   {
@@ -73,24 +79,40 @@ export const steps: readonly Step[] = [
     description:
       "Analizamos la cartera, la documentación respaldatoria y la antigüedad de cada deuda para fijar prioridades.",
     timing: "Primera semana",
+    deliverable: {
+      title: "Informe de cartera",
+      description: "Composición, antigüedad y prioridades de recupero de cada segmento.",
+    },
   },
   {
     title: "Estrategia",
     description:
       "Definimos un plan por segmento: canales de contacto, tono, plazos y condiciones aceptables de acuerdo.",
     timing: "Semanas 1 y 2",
+    deliverable: {
+      title: "Plan de gestión",
+      description: "Canales, plazos y condiciones de acuerdo, validados con su empresa.",
+    },
   },
   {
     title: "Gestión y negociación",
     description:
       "Contactamos a cada deudor y negociamos acuerdos viables, siempre documentados y con seguimiento de cumplimiento.",
     timing: "Gestión continua",
+    deliverable: {
+      title: "Reporte mensual de avance",
+      description: "Gestiones realizadas, acuerdos firmados y montos cobrados en el período.",
+    },
   },
   {
     title: "Instancia judicial y cierre",
     description:
       "Si no hay acuerdo, iniciamos las acciones legales que correspondan e informamos cada avance hasta el cobro.",
     timing: "Según el caso",
+    deliverable: {
+      title: "Rendición final",
+      description: "Detalle de lo recuperado y del estado de cada caso al cierre.",
+    },
   },
 ];
 
