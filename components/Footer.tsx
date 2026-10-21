@@ -1,6 +1,7 @@
 ﻿import { ArrowUp, ArrowUpRight } from "lucide-react";
 
 import { AnchorLink } from "@/components/AnchorLink";
+import { ContactDetails } from "@/components/ContactDetails";
 import { FooterWatermark } from "@/components/FooterWatermark";
 import { Logo } from "@/components/Logo";
 import { navLinks, sectionMark, site } from "@/lib/site";
@@ -54,16 +55,8 @@ export function Footer() {
           </nav>
 
           <div className="lg:col-span-3 lg:col-start-10">
-            <h2 className="font-sans text-eyebrow font-medium uppercase text-gold-light">Estudio</h2>
-            <address className="mt-6 space-y-3 text-[0.9375rem] not-italic text-paper/85">
-              <p>{site.contact.address}</p>
-              <p>
-                <a href={site.contact.phoneHref} className="link-underline hover:text-paper">
-                  {site.contact.phone}
-                </a>
-              </p>
-              <p>{site.contact.hours}</p>
-            </address>
+            <h2 className="font-sans text-eyebrow font-medium uppercase text-gold-light">Contacto</h2>
+            <ContactDetails variant="compact" className="mt-6" />
           </div>
         </div>
 
