@@ -5,8 +5,9 @@ import { Plus } from "lucide-react";
 import { useId, useState } from "react";
 
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
-import { Photo } from "@/components/Photo";
+import { ServiceMedia } from "@/components/ServiceMedia";
 import type { Service } from "@/lib/content";
+import { ScrollTrigger } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
 import { servicePhotos } from "@/lib/photos";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,8 @@ import { cn } from "@/lib/utils";
  */
 export function ServiceIndex({ services }: { services: readonly Service[] }) {
   const [open, setOpen] = useState<number | null>(0);
+  // Hasta el primer clic, el panel abierto por defecto se revela con el scroll.
+  const [interacted, setInteracted] = useState(false);
 
   return (
     <RevealGroup as="ul" stagger={0.08} className="border-t border-ink/20">
@@ -26,7 +29,11 @@ export function ServiceIndex({ services }: { services: readonly Service[] }) {
             service={service}
             index={index}
             open={open === index}
-            onToggle={() => setOpen((current) => (current === index ? null : index))}
+            scrubReveal={!interacted}
+            onToggle={() => {
+              setInteracted(true);
+              setOpen((current) => (current === index ? null : index));
+            }}
           />
         </RevealItem>
       ))}
@@ -38,10 +45,11 @@ type ServiceRowProps = {
   service: Service;
   index: number;
   open: boolean;
+  scrubReveal: boolean;
   onToggle: () => void;
 };
 
-function ServiceRow({ service, index, open, onToggle }: ServiceRowProps) {
+function ServiceRow({ service, index, open, scrubReveal, onToggle }: ServiceRowProps) {
   const uid = useId();
   const buttonId = `${uid}-boton`;
   const panelId = `${uid}-panel`;
@@ -87,7 +95,7 @@ function ServiceRow({ service, index, open, onToggle }: ServiceRowProps) {
         </button>
       </h3>
 
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} onExitComplete={() => ScrollTrigger.refresh()}>
         {open && (
           <motion.div
             id={panelId}
@@ -97,29 +105,38 @@ function ServiceRow({ service, index, open, onToggle }: ServiceRowProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="overflow-hidden"
+            // El acordeón cambia el alto de la página: se recalculan los
+            // ScrollTrigger de más abajo (pin del Proceso, reveals).
+            onAnimationComplete={() => ScrollTrigger.refresh()}
+            className="-mx-4 overflow-hidden lg:-mx-6"
           >
-            <div className="grid gap-8 pb-10 pl-[3.5rem] pt-2 lg:grid-cols-12 lg:gap-8 lg:pb-14 lg:pl-0">
-              <Photo
-                src={photo.src}
-                alt={photo.alt}
-                sizes="(min-width: 1024px) 22vw, 90vw"
-                frameClassName="aspect-[16/10] lg:aspect-[4/3]"
-                className="lg:col-span-3 lg:col-start-2 lg:pl-6"
-              />
-              <p className="max-w-prose text-lead text-ink-soft lg:col-span-4 lg:col-start-5">
-                {service.description}
-              </p>
-              <ul className="space-y-3 text-[0.9375rem] text-ink lg:col-span-4 lg:col-start-9">
-                {service.items.map((item, itemIndex) => (
-                  <li key={item} className="flex items-baseline gap-4 border-b border-ink/10 pb-3">
-                    <span aria-hidden="true" className="font-serif text-sm italic text-gold-deep">
-                      {number}.{itemIndex + 1}
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            {/*
+              Grilla firme: [imagen 40 %] [descripción 32 %] [sub-ítems 28 %].
+              El panel tiene el mismo sangrado que el encabezado (-mx-4 / -mx-6,
+              aplicado en el contenedor con overflow-hidden): la imagen
+              comparte el borde izquierdo con la franja petróleo y toca el
+              borde inferior del panel. Columnas estiradas a la misma altura.
+            */}
+            <div className="grid lg:grid-cols-[minmax(0,40fr)_minmax(0,32fr)_minmax(0,28fr)]">
+              <ServiceMedia photo={photo} scrub={scrubReveal} className="aspect-[16/10] lg:aspect-auto lg:min-h-[26rem]" />
+
+              <div className="flex flex-col justify-center px-4 pb-8 pl-[4.5rem] pt-10 lg:px-12 lg:py-14">
+                <p className="text-eyebrow uppercase text-gold-deep">Alcance del servicio</p>
+                <p className="mt-5 max-w-prose text-lead text-ink-soft">{service.description}</p>
+              </div>
+
+              <div className="flex flex-col justify-center px-4 pb-12 pl-[4.5rem] lg:border-l lg:border-ink/15 lg:px-10 lg:py-14">
+                <ul className="space-y-3 border-t border-ink/10 pt-6 text-[0.9375rem] text-ink lg:border-t-0 lg:pt-0">
+                  {service.items.map((item, itemIndex) => (
+                    <li key={item} className="flex items-baseline gap-4 border-b border-ink/10 pb-3 last:border-b-0">
+                      <span aria-hidden="true" className="font-serif text-sm italic text-gold-deep">
+                        {number}.{itemIndex + 1}
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </motion.div>
         )}

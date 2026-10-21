@@ -14,34 +14,43 @@ import studioContacto from "@/assets/fotos/estudio/contacto.jpg";
 import studioHero from "@/assets/fotos/estudio/hero.jpg";
 import studioNosotros from "@/assets/fotos/estudio/nosotros.jpg";
 import nosotros from "@/assets/fotos/nosotros.jpg";
-import servicioCobranzas from "@/assets/fotos/servicio-cobranzas.jpg";
 import servicioContable from "@/assets/fotos/servicio-contable.jpg";
 import servicioJuridico from "@/assets/fotos/servicio-juridico.jpg";
 import servicioRecupero from "@/assets/fotos/servicio-recupero.jpg";
 import type { Service } from "@/lib/content";
 
-export type SitePhoto = { src: StaticImageData; alt: string; position?: string };
+export type SitePhoto = {
+  src: StaticImageData;
+  alt: string;
+  position?: string;
+  /** Tratamiento de color ya aplicado al archivo (no se suma el filtro CSS). */
+  toned?: boolean;
+};
 
 export const studioPhotos = {
   hero: {
     src: studioHero,
     alt: "Mano firmando un documento con una lapicera sobre un escritorio.",
     position: "30% 45%",
+    toned: true,
   },
   cobranzas: {
     src: studioCobranzas,
     alt: "Profesional firmando documentación sobre una mesa de reuniones.",
     position: "60% 60%",
+    toned: true,
   },
   nosotros: {
     src: studioNosotros,
     alt: "Dos profesionales revisando juntos un documento en la oficina.",
     position: "45% 30%",
+    toned: true,
   },
   contacto: {
     src: studioContacto,
     alt: "Reunión de trabajo de tres profesionales en una oficina vidriada.",
     position: "50% 35%",
+    toned: true,
   },
 } satisfies Record<string, SitePhoto>;
 
@@ -58,7 +67,7 @@ export const photos = {
 } satisfies Record<string, SitePhoto>;
 
 export const servicePhotos: Record<Service["slug"], SitePhoto> = {
-  cobranzas: { src: servicioCobranzas, alt: "Apretón de manos sobre una mesa de trabajo." },
+  cobranzas: studioPhotos.cobranzas,
   juridico: { src: servicioJuridico, alt: "Profesional firmando documentación frente a una computadora." },
   contable: { src: servicioContable, alt: "Notas y cálculos manuscritos junto a una computadora portátil." },
   recupero: { src: servicioRecupero, alt: "Mesa de reunión con un portafolios y documentos." },
