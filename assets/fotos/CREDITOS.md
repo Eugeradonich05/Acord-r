@@ -9,4 +9,3 @@ Las fotos del estudio (hero, cobranzas, nosotros, contacto) están en `public/ph
 | servicio-juridico.jpg | [Business Working](https://stocksnap.io/photo/business-working-RRJH1KMRMW) | Direct Media | CC0 |
 | servicio-contable.jpg | [Writing Papers](https://stocksnap.io/photo/writing-papers-Y01VDYAX63) | Helloquence | CC0 |
 | servicio-recupero.jpg | [Work Bag](https://stocksnap.io/photo/work-bag-96E1A8F1CB) | Alejandro Escamilla | CC0 |
-| contacto.jpg | [Writing Drawing](https://stocksnap.io/photo/writing-drawing-8Y0EDX4VP9) | Green Chameleon | CC0 |

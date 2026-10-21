@@ -3,12 +3,11 @@
 //   public/photo/; en assets/fotos/estudio/ hay copias a 2400 px de ancho
 //   con el tratamiento de color ya aplicado (desaturación leve, tono neutro;
 //   ver README). next/image genera los tamaños finales.
-// - `photos` / `servicePhotos`: provisorias de StockSnap (CC0) que se van
-//   reemplazando sección por sección. Créditos en assets/fotos/CREDITOS.md.
+// - `servicePhotos`: Cobranzas usa la foto del estudio; el resto son
+//   provisorias de StockSnap (CC0). Créditos en assets/fotos/CREDITOS.md.
 
 import type { StaticImageData } from "next/image";
 
-import contacto from "@/assets/fotos/contacto.jpg";
 import studioCobranzas from "@/assets/fotos/estudio/cobranzas.jpg";
 import studioContacto from "@/assets/fotos/estudio/contacto.jpg";
 import studioHero from "@/assets/fotos/estudio/hero.jpg";
@@ -50,15 +49,9 @@ export const studioPhotos = {
   contacto: {
     src: studioContacto,
     alt: "Reunión de trabajo de tres profesionales en una oficina vidriada.",
-    position: "50% 35%",
+    // Recorte vertical (mitad del panel de Contacto): centra la mesa y los rostros.
+    position: "50% 40%",
     toned: true,
-  },
-} satisfies Record<string, SitePhoto>;
-
-export const photos = {
-  contacto: {
-    src: contacto,
-    alt: "Mano escribiendo una carta sobre un escritorio.",
   },
 } satisfies Record<string, SitePhoto>;
 

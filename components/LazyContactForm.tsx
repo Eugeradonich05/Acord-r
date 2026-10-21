@@ -39,7 +39,7 @@ function FormPlaceholder() {
   return (
     <div
       aria-hidden="true"
-      className="min-h-[46rem] rounded-sm border border-line bg-card sm:min-h-[40rem]"
+      className="min-h-[58rem] sm:min-h-[52rem] lg:min-h-[49rem]"
     />
   );
 }

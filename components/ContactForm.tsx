@@ -1,13 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { AlertCircle, ArrowRight, Check, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { MagneticButton } from "@/components/motion/MagneticButton";
-import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EASE } from "@/lib/motion";
@@ -40,6 +39,19 @@ const FIELD_ID: Record<FieldName, string> = {
 const FIELD_ORDER: readonly FieldName[] = ["name", "message", "email", "phone"];
 
 const errorId = (field: FieldName) => `${FIELD_ID[field]}-error`;
+
+// Entrada de la carta: los bloques aparecen en cascada al llegar a la vista.
+// Con movimiento reducido, MotionConfig deja sólo el fundido de opacidad.
+const FORM_VARIANTS: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+  exit: { opacity: 0, y: -16, transition: { duration: 0.6, ease: EASE } },
+};
+
+const BLOCK_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+};
 
 /**
  * Formulario de contacto presentado como una carta con espacios a completar.
@@ -110,11 +122,10 @@ export function ContactForm() {
   });
 
   return (
-    <Reveal
-      delay={0.15}
-      className="relative rounded-sm border border-line bg-card p-6 shadow-[0_30px_60px_-40px_rgb(var(--petrol)/0.35)] sm:p-10 lg:p-12"
-    >
-      <AnimatePresence mode="wait" initial={false}>
+    // Sin tarjeta propia: el formulario se apoya en la mitad off-white del
+    // panel partido de Contacto, que pone fondo y márgenes.
+    <div className="relative">
+      <AnimatePresence mode="wait">
         {status.state === "success" ? (
           <SuccessMessage
             key="success"
@@ -127,10 +138,11 @@ export function ContactForm() {
         ) : (
           <motion.form
             key="form"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.6, ease: EASE }}
+            variants={FORM_VARIANTS}
+            initial="hidden"
+            whileInView="visible"
+            exit="exit"
+            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
             onAnimationComplete={() => {
               // Al volver desde "Enviar otra consulta", el foco va al primer campo.
               if (!refocusRef.current) return;
@@ -144,12 +156,15 @@ export function ContactForm() {
             className="grid gap-7"
           >
             {/* Membrete de la carta */}
-            <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-4 text-eyebrow uppercase text-stone">
+            <motion.div
+              variants={BLOCK_VARIANTS}
+              className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-4 text-eyebrow uppercase text-stone"
+            >
               <span className="text-gold-deep">Consulta · {site.name}</span>
               <span>Rosario, {today}</span>
-            </div>
+            </motion.div>
 
-            <div className="font-serif text-display-sm leading-[2.2] text-ink">
+            <motion.div variants={BLOCK_VARIANTS} className="font-serif text-display-sm leading-[2.2] text-ink">
               <p>Señores {site.shortName}:</p>
               <p className="mt-3">
                 Mi nombre es{" "}
@@ -163,9 +178,9 @@ export function ContactForm() {
                 />{" "}
                 y les escribo por lo siguiente:
               </p>
-            </div>
+            </motion.div>
 
-            <div className="relative">
+            <motion.div variants={BLOCK_VARIANTS} className="relative">
               <label htmlFor={FIELD_ID.message} className="sr-only">
                 Detalle de la consulta
               </label>
@@ -185,9 +200,9 @@ export function ContactForm() {
               >
                 {message.length}/{MESSAGE_MAX}
               </span>
-            </div>
+            </motion.div>
 
-            <div className="font-serif text-display-sm leading-[2.2] text-ink">
+            <motion.div variants={BLOCK_VARIANTS} className="font-serif text-display-sm leading-[2.2] text-ink">
               <p>
                 Pueden responderme a{" "}
                 <Blank
@@ -214,7 +229,7 @@ export function ContactForm() {
                 <span className="hidden sm:inline">.</span>
               </p>
               <p className="mt-3 italic text-ink-soft">Saludo a ustedes atentamente.</p>
-            </div>
+            </motion.div>
 
             {/* Honeypot: fuera de pantalla y fuera del orden de tabulación */}
             <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
@@ -267,7 +282,10 @@ export function ContactForm() {
               )}
             </div>
 
-            <div className="flex flex-col-reverse gap-6 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <motion.div
+              variants={BLOCK_VARIANTS}
+              className="flex flex-col-reverse gap-6 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between"
+            >
               <p id="contacto-form-nota" className="max-w-[34ch] text-xs leading-relaxed text-stone">
                 Sus datos se usan solo para responder esta consulta y se tratan conforme a la Ley
                 25.326.
@@ -285,11 +303,11 @@ export function ContactForm() {
                   )}
                 </Button>
               </MagneticButton>
-            </div>
+            </motion.div>
           </motion.form>
         )}
       </AnimatePresence>
-    </Reveal>
+    </div>
   );
 }
 

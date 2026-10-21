@@ -294,16 +294,7 @@ html.is-preloading .animate-settle {
   }
 }
 
-/* Fotografía: telón de entrada (hero) y asentamiento de la imagen */
-@keyframes curtain {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
+/* Fotografía: asentamiento de la imagen del hero */
 @keyframes settle {
   from {
     transform: scale(1.14);
@@ -313,10 +304,6 @@ html.is-preloading .animate-settle {
   }
 }
 
-.animate-curtain {
-  animation: curtain 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards;
-}
-
 .animate-settle {
   animation: settle 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards;
 }
@@ -324,10 +311,6 @@ html.is-preloading .animate-settle {
 /* Corrección de color común: unifica fotos de distintas fuentes */
 .photo-tone {
   filter: saturate(0.78) contrast(1.04) sepia(0.06);
-}
-
-.photo-duotone {
-  filter: grayscale(1) contrast(1.1) brightness(1.05);
 }
 
 /* Indicador de scroll del hero */
