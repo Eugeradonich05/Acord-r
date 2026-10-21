@@ -69,18 +69,23 @@ app/
   api/contact/route.ts  Envío del formulario (validación, anti-spam, Resend)
   robots.ts, sitemap.ts SEO
 components/
-  Hero, Services, About, Process, Stats, Contact, Footer, Navbar
-  ServiceIndex          Índice de servicios (acordeón con barrido de tinta)
-  Manifesto             Texto que se enciende palabra por palabra con el scroll
+  Hero, Services, About, Process, Contact, Footer, Navbar
+  Preloader             Intro de marca (aros), una vez por sesión
+  ServiceIndex + ServiceMedia   Acordeón de servicios con imagen a sangre
+  Marquee, FooterWatermark      Banda tipográfica y marca de agua con scroll
   ContactForm + LazyContactForm   Carta con espacios a completar (carga diferida)
-  SectionHeading, Logo, AnchorLink, StructuredData, Providers
-  motion/               Reveal, RevealText, MagneticButton, Counter, Rings,
-                        SmoothScroll (Lenis), useParallax (GSAP)
+  SectionHeading, Logo, AnchorLink, StructuredData, Providers, Photo
+  motion/               useScrollMotion (hook único GSAP/ScrollTrigger),
+                        HeroScene, AboutScene, ScrollProgress, SmoothScroll
+                        (Lenis), useParallax, Reveal, RevealText, Rings,
+                        MagneticButton
   ui/                   button, card, input, textarea, label (shadcn/ui)
 lib/
   site.ts               Datos institucionales (dirección, email, teléfono, CUIT)
   content.ts            Textos: servicios, valores, pasos del proceso y métricas
   validations.ts        Esquema zod del formulario
+  photos.ts             Fotos del sitio (del estudio y provisorias)
+  preloader.ts          Script inline y constantes del preloader
   fonts.ts, motion.ts, gsap.ts, utils.ts
 public/                 logo.svg, logo-mark.svg (favicon)
 ```

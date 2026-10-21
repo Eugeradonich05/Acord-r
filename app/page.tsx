@@ -5,7 +5,6 @@ import { LazyContactForm } from "@/components/LazyContactForm";
 import { Marquee } from "@/components/Marquee";
 import { Process } from "@/components/Process";
 import { Services } from "@/components/Services";
-import { Stats } from "@/components/Stats";
 import { StructuredData } from "@/components/StructuredData";
 
 export default function Home() {
@@ -17,7 +16,6 @@ export default function Home() {
       <Marquee />
       <About />
       <Process />
-      <Stats />
       <Contact form={<LazyContactForm />} />
     </>
   );

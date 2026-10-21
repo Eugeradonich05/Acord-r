@@ -13,7 +13,6 @@ import studioCobranzas from "@/assets/fotos/estudio/cobranzas.jpg";
 import studioContacto from "@/assets/fotos/estudio/contacto.jpg";
 import studioHero from "@/assets/fotos/estudio/hero.jpg";
 import studioNosotros from "@/assets/fotos/estudio/nosotros.jpg";
-import nosotros from "@/assets/fotos/nosotros.jpg";
 import servicioContable from "@/assets/fotos/servicio-contable.jpg";
 import servicioJuridico from "@/assets/fotos/servicio-juridico.jpg";
 import servicioRecupero from "@/assets/fotos/servicio-recupero.jpg";
@@ -43,7 +42,9 @@ export const studioPhotos = {
   nosotros: {
     src: studioNosotros,
     alt: "Dos profesionales revisando juntos un documento en la oficina.",
-    position: "45% 30%",
+    // Recorte vertical (columna de Nosotros): centra a las dos personas y
+    // alinea arriba, donde están los rostros.
+    position: "40% 0%",
     toned: true,
   },
   contacto: {
@@ -55,11 +56,6 @@ export const studioPhotos = {
 } satisfies Record<string, SitePhoto>;
 
 export const photos = {
-  nosotros: {
-    src: nosotros,
-    alt: "Equipo de trabajo revisando información en torno a una mesa.",
-    position: "50% 40%",
-  },
   contacto: {
     src: contacto,
     alt: "Mano escribiendo una carta sobre un escritorio.",
