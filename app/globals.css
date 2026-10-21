@@ -1,0 +1,348 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Paleta de marca (canales RGB para soportar opacidad en Tailwind) */
+    --petrol: 14 92 92; /* #0E5C5C */
+    --gold: 201 162 75; /* #C9A24B — solo decorativo o sobre carbón */
+    --gold-light: 227 203 143; /* #E3CB8F — texto sobre petróleo (AA) */
+    --gold-deep: 122 92 23; /* #7A5C17 — texto sobre off-white (AA) */
+    --paper: 247 245 240; /* #F7F5F0 */
+    --paper-deep: 239 235 227; /* #EFEBE3 — superficies alternas */
+    --ink: 26 26 26; /* #1A1A1A */
+    --ink-soft: 44 44 44; /* #2C2C2C */
+    --stone: 102 102 102; /* #666666 — texto secundario (AA: 5.3:1 sobre paper, 4.8:1 sobre paper-deep) */
+    --line: 221 216 205; /* #DDD8CD — divisores de 1px */
+
+    /* Semánticos (shadcn/ui) */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --primary: var(--petrol);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-deep);
+    --secondary-foreground: var(--ink);
+    --accent: var(--gold);
+    --accent-foreground: var(--ink);
+    --muted: var(--paper-deep);
+    --muted-foreground: var(--stone);
+    --destructive: 168 38 38;
+    --destructive-foreground: var(--paper);
+    --card: 255 255 255;
+    --card-foreground: var(--ink);
+    --border: var(--line);
+    --input: 128 122 112; /* #807A70 — borde de campos (3:1 sobre blanco) */
+    --ring: var(--petrol);
+    --radius: 0.375rem;
+
+    /* Ritmo */
+    --nav-h: 4.5rem;
+    --space-section: clamp(5rem, 2.5rem + 9vw, 10rem);
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --nav-h: 5.5rem;
+    }
+  }
+
+  html {
+    scroll-padding-top: var(--nav-h);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-normal text-balance;
+    font-optical-sizing: auto;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(var(--petrol));
+    color: rgb(var(--paper));
+  }
+
+  /* Foco siempre visible y consistente */
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Destinos de ancla: reciben foco por teclado sin anillo visible */
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+}
+
+@layer components {
+  /* Rótulo de sección: VERSALITAS + filete dorado */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 font-sans text-eyebrow font-medium uppercase text-gold-deep;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply block h-px w-8 bg-gold;
+  }
+
+  /* Subrayado que se dibuja de izquierda a derecha */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* Divisor editorial de 1px */
+  .hairline {
+    @apply h-px w-full bg-line;
+  }
+}
+
+@layer utilities {
+  /* Grano de papel sutil sobre toda la página */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Accesibilidad: sin movimiento para quien lo pidió */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Entrada del hero en CSS puro: arranca con el primer pintado, sin esperar la
+ * hidratación de React (clave para el LCP en mobile). Retardo vía --delay.
+ */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes word-up {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/*
+ * `backwards` (no `both`): el estado final coincide con el natural, así que al
+ * terminar la animación se suelta y el elemento deja de ser una capa animada.
+ * Evita que la salida del hero al hacer scroll (transform + opacity sobre el
+ * contenedor) choque con animaciones retenidas.
+ */
+.animate-enter {
+  animation: enter-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) backwards;
+}
+
+.animate-word {
+  animation: word-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) backwards;
+}
+
+/*
+ * Preloader. Un script inline en <head> agrega `is-preloading` a <html> sólo
+ * en la primera carga de la sesión (antes del primer pintado, sin parpadeo).
+ * Mientras tanto: overlay visible, scroll bloqueado y la entrada del hero
+ * desactivada, para que arranque encadenada con la salida del overlay.
+ */
+.preloader {
+  display: none;
+}
+
+html {
+  /* Reserva el lugar de la barra de scroll: al bloquear/liberar el scroll
+     (preloader, menú mobile) la página no se corre de costado. */
+  scrollbar-gutter: stable;
+}
+
+html.is-preloading {
+  overflow: hidden;
+  /* El canal reservado de la barra de scroll toma el color del overlay */
+  background-color: rgb(var(--petrol));
+}
+
+html.is-preloading .preloader {
+  display: flex;
+  /* Red de seguridad: si el JS no llega a ejecutarse, el overlay se va solo. */
+  animation: preloader-failsafe 0.5s ease 4.5s forwards;
+}
+
+/*
+ * Debajo del overlay el hero se pinta ya en su estado final (no invisible):
+ * así el navegador registra el LCP enseguida. Al quitar la clase, las
+ * animaciones de entrada se aplican de nuevo y arrancan desde cero, justo
+ * cuando el overlay empieza a subir.
+ */
+html.is-preloading .animate-enter,
+html.is-preloading .animate-word,
+html.is-preloading .animate-settle {
+  animation: none;
+}
+
+/* La regla global de movimiento reducido anula duraciones y retardos: el
+   respaldo del preloader es un temporizador, no una animación, y lo conserva. */
+@media (prefers-reduced-motion: reduce) {
+  html.is-preloading .preloader {
+    animation-duration: 0.5s !important;
+    animation-delay: 4.5s !important;
+  }
+
+  .preloader-rings {
+    animation: none !important;
+  }
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Trazo de los aros: pathLength="1" en el SVG, así el recorrido es 0 → 1 */
+.preloader-ring {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: ring-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) var(--delay, 0s) forwards;
+}
+
+@keyframes ring-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.preloader-rings {
+  animation: ring-turn 3.2s cubic-bezier(0.45, 0, 0.55, 1) 0.8s forwards;
+}
+
+@keyframes ring-turn {
+  to {
+    transform: rotate(20deg);
+  }
+}
+
+.preloader-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0s) forwards;
+}
+
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.preloader-bar {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: preload-progress 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+@keyframes preload-progress {
+  to {
+    transform: scaleX(0.86);
+  }
+}
+
+/* Fotografía: telón de entrada (hero) y asentamiento de la imagen */
+@keyframes curtain {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1.14);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.animate-curtain {
+  animation: curtain 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards;
+}
+
+.animate-settle {
+  animation: settle 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards;
+}
+
+/* Corrección de color común: unifica fotos de distintas fuentes */
+.photo-tone {
+  filter: saturate(0.78) contrast(1.04) sepia(0.06);
+}
+
+.photo-duotone {
+  filter: grayscale(1) contrast(1.1) brightness(1.05);
+}
+
+/* Indicador de scroll del hero */
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+/* Rotación continua del motivo de aros (components/motion/Rings.tsx) */
+@keyframes rings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
